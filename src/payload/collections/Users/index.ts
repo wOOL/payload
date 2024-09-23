@@ -47,6 +47,14 @@ const Users: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'balance',
+      type: 'number',
+      defaultValue: 10,
+      admin: {
+        description: 'Customer balance',
+      },
+    },
+    {
       name: 'roles',
       type: 'select',
       hasMany: true,

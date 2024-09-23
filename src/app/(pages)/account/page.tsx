@@ -57,6 +57,10 @@ export default async function Account() {
         ]}
       />
       <Gutter className={classes.account}>
+      <div className={classes.balanceContainer}>
+          <h2>Your Balance</h2>
+          <p className={classes.balance}>{user.balance || 0}</p>
+        </div>
         <AccountForm />
         <HR />
         <h2>Purchased Products</h2>

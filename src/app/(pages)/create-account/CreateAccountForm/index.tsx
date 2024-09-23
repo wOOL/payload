@@ -13,6 +13,7 @@ import { useAuth } from '../../../_providers/Auth'
 import classes from './index.module.scss'
 
 type FormData = {
+  name: string
   email: string
   password: string
   passwordConfirm: string
@@ -79,6 +80,14 @@ const CreateAccountForm: React.FC = () => {
         {'.'}
       </p>
       <Message error={error} className={classes.message} />
+      <Input
+        name="name"
+        label="Name"
+        required
+        register={register}
+        error={errors.root}
+        type="text"
+      />
       <Input
         name="email"
         label="Email Address"

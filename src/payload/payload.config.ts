@@ -28,6 +28,7 @@ import { Header } from './globals/Header'
 import { Settings } from './globals/Settings'
 import { priceUpdated } from './stripe/webhooks/priceUpdated'
 import { productUpdated } from './stripe/webhooks/productUpdated'
+import { consume } from './endpoints/consume'
 
 const generateTitle: GenerateTitle = () => {
   return 'My Store'
@@ -87,13 +88,18 @@ export default buildConfig({
   graphQL: {
     schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
   },
-  cors: ['https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
+  cors: ['http://localhost:8100', 'https://cerden.net', 'https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
     Boolean,
   ),
   csrf: ['https://checkout.stripe.com', process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(
     Boolean,
   ),
   endpoints: [
+    {
+      path: '/consume',
+      method: 'post',
+      handler: consume
+    },
     {
       path: '/create-payment-intent',
       method: 'post',

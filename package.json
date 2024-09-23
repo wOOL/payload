@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "payload-ecommerce",
   "description": "E-commerce template for Payload",
   "version": "1.0.0",
   "main": "dist/server.js",

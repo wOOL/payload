@@ -420,6 +420,7 @@ export interface User {
   loginAttempts?: number | null
   lockUntil?: string | null
   password: string | null
+  balance?: number
 }
 export interface Redirect {
   id: string
