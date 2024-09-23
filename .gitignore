@@ -1,0 +1,10 @@
+build
+dist
+media
+node_modules
+.DS_Store
+.next
+.vercel
+yarn.lock
+package-lock.json
+.vscode
