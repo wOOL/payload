@@ -49,7 +49,7 @@ const Users: CollectionConfig = {
     {
       name: 'balance',
       type: 'number',
-      defaultValue: 10,
+      defaultValue: 200,
       admin: {
         description: 'Customer balance',
       },

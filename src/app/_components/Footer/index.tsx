@@ -26,8 +26,8 @@ export async function Footer() {
   return (
     <footer className={classes.footer}>
       <Gutter className={classes.wrap}>
-        <Link href="/">
-          DentalAppFrontend
+        <Link href="mailto:a@becertain.ai">
+          BeCertain LtD 
         </Link>
         <nav className={classes.nav}>
           <ThemeSelector />
