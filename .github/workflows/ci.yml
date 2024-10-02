@@ -1,0 +1,85 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]  # Adjust this to your main branch name
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+
+    services:
+      mongodb:
+        image: mongo:4.4.29
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ connectionStatus: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22.6.0'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build
+      run: yarn build
+
+    - name: Compress artifacts
+      run: tar -czf artifacts.tar.gz build dist .next node_modules package.json
+
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: Deploy to Server
+      run: |
+        scp artifacts.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/ubuntu/payload-ecommerce/
+        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
+          set -x
+          set +e
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          node --version
+          yarn --version
+          echo "Current running processes:"
+          ps aux | grep "[n]ode.*dist/server.js" || true
+          echo "Attempting to find and kill existing processes"
+          pids=$(pgrep -f "node.*dist/server.js" | grep -v $$) || true
+          if [ -n "$pids" ]; then
+            echo "Found processes with PIDs: $pids"
+            for pid in $pids; do
+              echo "Attempting to kill process $pid"
+              kill -15 $pid || true
+              sleep 1
+            done
+          else
+            echo "No matching processes found"
+          fi
+          echo "Waiting for processes to terminate"
+          sleep 5
+          echo "Processes after kill attempts:"
+          ps aux | grep "[n]ode.*dist/server.js" || true
+          echo "Removing old files"
+          rm -rf /home/ubuntu/payload-ecommerce/build
+          rm -rf /home/ubuntu/payload-ecommerce/dist
+          rm -rf /home/ubuntu/payload-ecommerce/.next
+          rm -rf /home/ubuntu/payload-ecommerce/node_modules
+          rm -f /home/ubuntu/payload-ecommerce/package.json
+          echo "Extracting new files"
+          tar -xzf /home/ubuntu/payload-ecommerce/artifacts.tar.gz -C /home/ubuntu/payload-ecommerce
+          rm /home/ubuntu/payload-ecommerce/artifacts.tar.gz
+          echo "Starting server"
+          cd /home/ubuntu/payload-ecommerce
+          nohup yarn serve >> log.txt 2>&1 &
+        '
