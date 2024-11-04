@@ -131,8 +131,7 @@ const CreateAccountForm: React.FC = () => {
           <p><span>You need
             to <b>accept these terms</b> in order to access the BECERTAIN tool and to upload
             any images. The uploaded images, data and the generated results will be stored temporarily
-            on servers in London. <b>After XXXX days, all the images, data and the results
-              are deleted forever and cannot be recovered.</b></span></p>
+            on servers in London. <b>After the detection session is closed, all the images, data and the results are deleted forever and cannot be recovered.</b></span></p>
 
           <p><b><span>End
             User License Agreement</span></b></p>
