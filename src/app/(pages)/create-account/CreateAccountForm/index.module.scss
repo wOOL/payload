@@ -20,3 +20,47 @@
 .message {
   margin-bottom: var(--base);
 }
+
+.termsContainer {
+  margin-bottom: 20px;
+  
+  h3 {
+    margin-bottom: 10px;
+  }
+}
+
+.termsText {
+  height: 200px;
+  overflow-y: auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.termsCheckbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 8px;
+
+  input[type="checkbox"] {
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
