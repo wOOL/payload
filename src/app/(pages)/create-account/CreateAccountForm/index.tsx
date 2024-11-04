@@ -63,10 +63,6 @@ const CreateAccountForm: React.FC = () => {
 
   const onSubmit = useCallback(
     async (data: FormData) => {
-      if (!isTermsAccepted) {
-        setError('You must accept the Terms and Conditions to create an account.')
-        return
-      }
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -297,12 +293,26 @@ const CreateAccountForm: React.FC = () => {
       <div className={classes.termsCheckbox}>
         <input
           type="checkbox"
+          {...register('termsAccepted', {
+            required: true,
+            onChange: (e) => {
+              if (!hasReadTerms) {
+                e.preventDefault()
+                alert('Please read through the entire Terms and Conditions before accepting.')
+                setIsTermsAccepted(false)
+                return false
+              }
+              setIsTermsAccepted(e.target.checked)
+            }
+          })}
           checked={isTermsAccepted}
-          onChange={handleTermsCheckbox}
         />
         <label>I agree to the Terms and Conditions stated above</label>
-        {!hasReadTerms && isTermsAccepted && (
+        {!hasReadTerms && (
           <span className={classes.error}>Please read the entire Terms and Conditions first</span>
+        )}
+        {errors.termsAccepted && (
+          <span className={classes.error}>You must accept the Terms and Conditions</span>
         )}
       </div>
       <Input
